@@ -6,10 +6,10 @@ class Robot():
     def __init__(self) -> None:
         arduino = serial.Serial(port='COM3', baudrate=115200, timeout=1)
 
-        fl_leg = Leg()
-        fr_leg = Leg()
-        bl_leg = Leg()
-        br_leg = Leg()
+        leg_fl = Leg()
+        leg_fr = Leg()
+        leg_bl = Leg()
+        leg_br = Leg()
 
             
     def run(self) -> None:

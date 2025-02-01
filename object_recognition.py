@@ -33,16 +33,9 @@ def draw_detection(img, found:list) -> None:
     amount_found = len(found)
 
     if amount_found != 0:
-        
-        # There may be more than one
-        # sign in the image
         for (x, y, width, height) in found:
-            
-            # We draw a green rectangle around
-            # every recognized sign
-            cv2.rectangle(img_rgb, (x, y), 
-                        (x + height, y + width), 
-                        (0, 255, 0), 5)
+            # draw a green rectangle around every detected object
+            cv2.rectangle(img_rgb, (x, y), (x + height, y + width), DETECTION_COLOUR, DETECTION_THICKNESS)
 
     # show image using matplotlib
     plt.subplot(1, 1, 1)

@@ -5,4 +5,3 @@ class Leg():
         self.knee = Servo()
         self.hip_y = Servo()
         self.hip_z = Servo()
-        h
