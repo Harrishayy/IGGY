@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/robot.css') }}">
+        <title>Robot Interface</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+    </head>
+
+    <div class="robot_control">
+        <button onclick="forward()" type="button">Forward</button>
+        <button onclick="backward()" type="button">Backward</button>
+        <button onclick="left()" type="button">Left</button>
+        <button onclick="right()" type="button">Right</button>
+
+        <div class="input_box">
+            <ion-icon name="lock_closed_outline"></ion-icon>
+            <input type="number" min=0 max="100" id="speed" required>
+            <label for="">Speed</label>
+        </div>
+
+        <div class="input_box">
+            <ion-icon name="lock_closed_outline"></ion-icon>
+            <input type="number" min="0" max="100" id="time" required>
+            <label for="">Time</label>
+        </div>
+
+    </div>
+
+    <div class="moves_box">
+    <button onclick="add_move()">Add Move</button>
+    <button onclick="save_moves()">Save Moves</button>
+    <button onclick="execute_moves()">Execute Moves</button>
+    <input type="text" id="file_name">
+    <ul id="moves_list"><li>Direction Speed Time</li></ul>
+    </div>
+      
+</html>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+    function forward() {
+        const speed = document.getElementById("speed").value;
+        const time = document.getElementById("time").value;
+
+        console.log(speed,time);
+
+        $.ajax({
+            url: "/robot-forward",
+            type: "POST",
+            data: JSON.stringify({"speed":speed,"time":time}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    };
+
+    function backward() {
+        const speed = document.getElementById("speed").value;
+        const time = document.getElementById("time").value;
+
+        console.log(speed,time);
+
+        $.ajax({
+            url: "/robot-backward",
+            type: "POST",
+            data: JSON.stringify({"speed":speed,"time":time}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    };
+
+    function left() {
+        const speed = document.getElementById("speed").value;
+        const time = document.getElementById("time").value;
+
+        console.log(speed,time);
+
+        $.ajax({
+            url: "/robot-left",
+            type: "POST",
+            data: JSON.stringify({"speed":speed,"time":time}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    };
+
+    function right() {
+        const speed = document.getElementById("speed").value;
+        const time = document.getElementById("time").value;
+
+        console.log(speed,time);
+
+        $.ajax({
+            url: "/robot-right",
+            type: "POST",
+            data: JSON.stringify({"speed":speed,"time":time}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    };
+</script>
+
+<script language="JavaScript" type="text/javascript">
+    function add_move() {
+        const moves_list = document.getElementById("moves_list");
+        const newMove = document.createElement("li");
+        const selectBox = document.createElement("select");
+        selectBox.id = "move_direction"
+        const options = ["Forwards", "Backwards", "Left", "Right"];
+        const speedBox = document.createElement("input");
+        speedBox.id = "move_speed"
+        const timeBox = document.createElement("input");
+        timeBox.id = "move_time"
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "x"
+        deleteButton.name = "delete_button"
+        deleteButton.onclick = function() {
+            delete_move(this);
+        }
+
+        options.forEach(function (option) {
+          const optionElement = document.createElement("option");
+          optionElement.value = option;
+          optionElement.text = option;
+          selectBox.add(optionElement);
+        });
+
+        newMove.appendChild(selectBox);
+        newMove.appendChild(speedBox);
+        newMove.appendChild(timeBox);
+        newMove.appendChild(deleteButton);
+        moves_list.appendChild(newMove);
+      }
+
+    function delete_move(button) {
+        const listItem = button.parentNode;
+        const moves_list = listItem.parentNode;
+        moves_list.removeChild(listItem);
+    }
+
+    function save_moves(){
+        // Get the list element
+        var moves_list = document.getElementById("moves_list");
+        const moves_array = [];
+        // Get the list items as an HTML collection
+        var list_items = moves_list.getElementsByTagName("li");
+
+        list_items.forEach(function(item) {
+            var direction = item.getElementById("move_direction").value;
+            var speed = item.getElementById("move_speed").value;
+            var time = item.getElementsByTagName("move_time").value;
+            var move = [direction,speed,time];
+            moves_array.push(move);
+        });
+
+        // Display the array in the console
+        console.log(moves_array);
+
+
+
+
+        // $.ajax({
+        //     url: "/save-moves",
+        //     type: "POST",
+        //     data: JSON.stringify({"moves_list":moves_list, "file_name":file_name}),
+        //     contentType: "application/json; charset=utf-8",
+        //     dataType: "json",
+        //     success: function(response) {
+        //         console.log(response);
+        //     }
+        // });
+    }
+
+    function execute_moves(){
+        const file_name = document.getElementById("file_name").value
+        $.ajax({
+            url: "/execute-moves",
+            type: "POST",
+            data: JSON.stringify({"file_name":file_name}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    }
+
+
+</script>

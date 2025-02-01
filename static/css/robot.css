@@ -1,0 +1,41 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Comfortaa",Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --text: #ffffff;
+    --background: #0e0f12;
+    --button: #0094ff;
+    --secondary_button: #1a1d21;
+    --accent: #0094ff;
+}
+
+body{
+    background-color: var(--background);
+    color: var(--text)
+}
+
+button{
+    width: fit-content;
+    border-radius: 5px;
+    background-color: var(--button);
+    color: var(--text);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    font-style: bold;
+    margin: 10px;
+    padding: 5px;
+}
+
+button[name=delete_button]{
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: var(--secondary_button);
+}
