@@ -3,7 +3,9 @@ import matplotlib as plt
 
 DETECTION_COLOUR = (0,0,255)
 DETECTION_THICKNESS = 2
-FPS = 24
+
+CAMERA_WIDTH = 1920 #pixel width of camera
+CAMERA_CONSTANT = 1 #depends on focal length of camera, need to edit based on camera we are given
 
 # link to haar cascades for human body: https://github.com/opencv/opencv/tree/master/data/haarcascades
 
@@ -25,7 +27,7 @@ def detect_object(img_data) -> list:
 
 def draw_detection(img, found:list) -> None:
     """
-    Shows image with object outlined in found. found is list of [[x,y,width,height], ...]
+    Draws detection boundary on image with objects outlined in found. found is list of [[x,y,width,height], ...]
     """
     
     amount_found = len(found)
@@ -43,8 +45,6 @@ def calculate_distance(detected_objects:list):
     """
     Calculates the approximate distance to the object in the image
     """
-    CAMERA_WIDTH = 1920 #pixel width
-    CAMERA_CONSTANT = 1 #depends on focal length of camera
     
     if len(detected_objects) > 0:
         for x,y,width,height in detected_objects:
