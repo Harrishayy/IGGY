@@ -13,6 +13,5 @@ class Servo():
         string = str(self.__pin) + "/" + str(position)
         self.__servo_board.write(bytes(string, encoding="utf-8"))
         
-        time.sleep(0.01)
         # message = self.__servo_board.readline()
         # print("Message: ", message)

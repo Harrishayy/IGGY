@@ -2,8 +2,8 @@ import time
 
 class MotorBoard():
     def __init__(self, arduino:object):
-        self.motor_l = Motor(arduino, 0, 0)
-        self.motor_r = Motor(arduino, 1, 0)
+        self.motor_l = Motor(arduino, 0)
+        self.motor_r = Motor(arduino, 1)
 
     def forward(self, speed:int):
         self.motor_l.set_speed(speed)
@@ -27,7 +27,7 @@ class MotorBoard():
 
 
 class Motor():
-    def __init__(self, arduino:object, id:int = 0, initial_pos:int = 0) -> None:
+    def __init__(self, arduino:object, id:int = 0) -> None:
         self.__arduino = arduino
         self.__id = id
         # ID 0 for left, 1 for right
@@ -35,7 +35,7 @@ class Motor():
 
     def set_speed(self, speed:int=0) -> None:
         """
-        Set the speed of the motor
+        Set the speed of the motor.
         """
 
         # move to position by communicating to arduino
