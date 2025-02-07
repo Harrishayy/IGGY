@@ -39,3 +39,10 @@ button[name=delete_button]{
 button:hover {
     background-color: var(--secondary_button);
 }
+
+.camera{
+    width: 40%;
+    height: auto;
+    margin: 20px;
+    float: right;
+}

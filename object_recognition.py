@@ -5,6 +5,7 @@ DETECTION_COLOUR = (0,0,255)
 DETECTION_THICKNESS = 2
 FPS = 24
 
+# link to haar cascades for human body: https://github.com/opencv/opencv/tree/master/data/haarcascades
 
 def detect_object(img_data) -> list:
     """
@@ -15,7 +16,7 @@ def detect_object(img_data) -> list:
     
     #the trained data for detection
     #tutorial for use in https://medium.com/@vipulgote4/guide-to-make-custom-haar-cascade-xml-file-for-object-detection-with-opencv-6932e22c3f0e
-    robot_detection_data = cv2.CascadeClassifier("cascade.xml")
+    robot_detection_data = cv2.CascadeClassifier("front_face_cascade.xml")
     
     found = robot_detection_data.detectMultiScale(img_gray, minNeighbors=9, minSize=(20, 20))
     
@@ -26,21 +27,16 @@ def draw_detection(img, found:list) -> None:
     """
     Shows image with object outlined in found. found is list of [[x,y,width,height], ...]
     """
-
-    img = cv2.imread(img)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
     amount_found = len(found)
 
     if amount_found != 0:
         for (x, y, width, height) in found:
             # draw a green rectangle around every detected object
-            cv2.rectangle(img_rgb, (x, y), (x + height, y + width), DETECTION_COLOUR, DETECTION_THICKNESS)
+            cv2.rectangle(img, (x, y), (x + height, y + width), DETECTION_COLOUR, DETECTION_THICKNESS)
 
-    # show image using matplotlib
-    plt.subplot(1, 1, 1)
-    plt.imshow(img_rgb)
-    plt.show()
+    return img
+
 
 
 def calculate_distance(detected_objects:list):
