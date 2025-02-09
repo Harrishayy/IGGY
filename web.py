@@ -51,10 +51,7 @@ def robot_move():
 
 
 
-
     s = speed, direction, time
-
-
 
     return jsonify({"response":s})
 
@@ -86,9 +83,11 @@ def generate_frames():
             #convert raw data to video stream
             ret, buffer = cv2.imencode('.jpg', outlined_frame)
             outlined_frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + outlined_frame + b'\r\n')  # concatenate frames one by one and show result
 
+            # return frame when processed so can be sent to web client, yield will not terminate the function so allows for repeated returns
+
+            yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + outlined_frame + b'\r\n')  
 
 if __name__ == "__main__":
     app.debug = True

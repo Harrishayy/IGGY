@@ -4,6 +4,8 @@ import matplotlib as plt
 DETECTION_COLOUR = (0,0,255)
 DETECTION_THICKNESS = 2
 
+#Distance to object(mm) = focal length(mm) x real height(mm) x image height(mm) / object height(pixels) x sensor height(mm)
+
 CAMERA_WIDTH = 1920 #pixel width of camera
 CAMERA_CONSTANT = 1 #depends on focal length of camera, need to edit based on camera we are given
 
@@ -20,7 +22,7 @@ def detect_object(img_data) -> list:
     #tutorial for use in https://medium.com/@vipulgote4/guide-to-make-custom-haar-cascade-xml-file-for-object-detection-with-opencv-6932e22c3f0e
     robot_detection_data = cv2.CascadeClassifier("front_face_cascade.xml")
     
-    found = robot_detection_data.detectMultiScale(img_gray, minNeighbors=9, minSize=(20, 20))
+    found = robot_detection_data.detectMultiScale(img_gray, minNeighbors=6, minSize=(20, 20))
     
     return found
 
