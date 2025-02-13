@@ -25,6 +25,8 @@ class MotorBoard():
         self.motor_l.set_speed(0)
         self.motor_r.set_speed(0)
 
+    
+
 
 class Motor():
     def __init__(self, arduino:object, id:int = 0) -> None:
@@ -42,5 +44,17 @@ class Motor():
         string = str(self.__id) + "/" + str(speed)
         self.__arduino.write(bytes(string, encoding="utf-8"))
 
-        message = self.__arduino.readline()
-        print("Message: ", message)
+        #message = self.__arduino.readline()
+        #print("Message: ", message)
+
+
+    def percentage_to_pwm(self, value:int):
+        """
+        Input percentage speed 0-100%, and returns value range for pwm
+        """
+        #max 255
+        #stop 0
+        #max reverse 1
+        pwm = value * 1.28 + 127
+
+        return pwm

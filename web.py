@@ -7,6 +7,7 @@ import cv2
 app = Flask(__name__)
 app.secret_key = "qUYlpm55JRqJN5VQjgQaxnMTxrsLuZL8" #randomly generated 32 character string with base 62
 robot = Robot(debug=True)
+#robot.shutdown()
 
 @app.route("/")
 def home():
@@ -15,7 +16,14 @@ def home():
 
 @app.route("/robot/")
 def main_page():
+    robot.initialise()
     return render_template("robot.html")
+
+@app.route("/kill/")
+def terminate():
+    robot.motor_board.stop()
+    robot.shutdown()
+    return redirect(url_for("main_page"))
 
 
 @app.route("/robot-move", methods=["POST"])
@@ -49,6 +57,8 @@ def robot_move():
             case 'd':
                 robot.motor_board.right(speed)
 
+            case "stop":
+                robot.motor_board.stop()
 
 
     s = speed, direction, time

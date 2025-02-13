@@ -31,4 +31,7 @@ document.addEventListener('keydown', function(event) {
     else if(event.key == 'd') {
         move_robot('d');
     }
+    else if(event.key == 'stop') {
+        move_robot('stop');
+    }
 });

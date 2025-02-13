@@ -46,3 +46,7 @@ button:hover {
     margin: 20px;
     float: right;
 }
+
+#kill {
+    background-color: #ff2500;
+}
