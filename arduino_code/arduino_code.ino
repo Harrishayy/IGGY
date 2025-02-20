@@ -11,7 +11,7 @@
 String data;
 int index = -1;
 int motor_id = 0;
-int speed = 255;
+int speed = 0;
 
 //for LED blinking
 bool led_state = true;
@@ -19,11 +19,10 @@ unsigned long loop_time = 0;
 unsigned long initial_time = 0;
 unsigned int led_interval = 500; //milliseconds
 
-
-#define MOTOR_SPEED_1_PIN 7 //set pwm speed 0-255
-#define MOTOR_SPEED_2_PIN 4 //set pwm speed 0-255
-#define MOTOR_1_PIN 6 //set digital to alternate direction
-#define MOTOR_2_PIN 5
+#define MOTOR_SPEED_1_PIN 6 //set pwm speed 0-255
+#define MOTOR_SPEED_2_PIN 5 //set pwm speed 0-255
+#define MOTOR_1_PIN 7 //set digital to alternate direction
+#define MOTOR_2_PIN 4
 
 //DHT dht(DHTPIN, DHTTYPE);
 
@@ -67,35 +66,56 @@ void loop() {
     motor_id = data.substring(0, index).toInt();
     speed = data.substring(index + 1).toInt();
     String strnum = String(speed);
-    Serial.print(strnum);
+    //Serial.print(motor_id);
 
     switch(motor_id)
     {
       case 0:
-        if (speed >= 0)
+        if (speed > 0)
         {
+          //Serial.println(speed);
           analogWrite(MOTOR_SPEED_1_PIN, speed);
           digitalWrite(MOTOR_1_PIN, HIGH);
         }
+
         else if (speed < 0)
         {
           speed = -speed;
+          //Serial.println(speed);
           analogWrite(MOTOR_SPEED_1_PIN, speed);
           digitalWrite(MOTOR_1_PIN, LOW);
         }
+
+        else
+        {
+          //Serial.println(0);
+          analogWrite(MOTOR_SPEED_1_PIN, 0);
+          digitalWrite(MOTOR_1_PIN, LOW);
+        }
+      
       
         break;
 
       case 1:
-        if (speed >= 0)
+        if (speed > 0)
         {
+          //Serial.println(speed);
           analogWrite(MOTOR_SPEED_2_PIN, speed);
           digitalWrite(MOTOR_2_PIN, HIGH);
         }
+
         else if (speed < 0)
         {
           speed = -speed;
+          //Serial.println(speed);
           analogWrite(MOTOR_SPEED_2_PIN, speed);
+          digitalWrite(MOTOR_2_PIN, LOW);
+        }
+
+        else
+        {
+          //Serial.println(0);
+          analogWrite(MOTOR_SPEED_2_PIN, 0);
           digitalWrite(MOTOR_2_PIN, LOW);
         }
       
@@ -115,17 +135,13 @@ void loop() {
     {
       digitalWrite(LED_PIN, LOW);
       led_state = false;
-
-      analogWrite(MOTOR_SPEED_1_PIN, 255);
-      digitalWrite(MOTOR_1_PIN, HIGH);
+      //Serial.println("Off");
     }
     else
     {
       digitalWrite(LED_PIN, HIGH);
       led_state = true;
-
-      analogWrite(MOTOR_SPEED_1_PIN, 255);
-      digitalWrite(MOTOR_1_PIN, LOW);
+      //Serial.println("On");
     }
   }
 
