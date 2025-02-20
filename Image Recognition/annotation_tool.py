@@ -3,6 +3,9 @@ import cv2
 
 import time
 
+WINDOW_X = 1280
+WINDOW_Y = 720
+
 
 class Annotate():
     def __init__(self) -> None:
@@ -113,10 +116,16 @@ class Annotate():
 
         img_directory = self.file_directory + r"/Image_Dataset/Positive/" + img_name
         img = cv2.imread(img_directory)
+        
         return img
         
 
     def display_image(self, img) -> None:
+        height, width, channels = img.shape
+
+        dimensions = (int(width * 0.1), int(height * 0.1))
+
+        img = cv2.resize(img, dimensions, interpolation=cv2.INTER_AREA)
         cv2.imshow("Annotation Tool", img)
         
 
