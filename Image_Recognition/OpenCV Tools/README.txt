@@ -26,9 +26,18 @@ Create Samples from Positive Text File:
 
 Open Git Bash Terminal or Command Prompt Terminal in the full code directory with all python files and Image Dataset inside and run the following command:
 
+<<<<<<< HEAD
 "C:\UCL\IGGY\Image_Recognition\OpenCV Tools\opencv_createsamples.exe" -info "C:\UCL\IGGY\Image_Recognition\Image_Dataset\positive.txt" -w 24 -h 24 -num 1000 -vec "C:\UCL\IGGY\Image_Recognition\Image_Dataset\positive.vec"
+=======
+"C:\Users\tmood\OneDrive - University College London\Year 1\Introduction to Electronics\Group Project\IGGY\IGGY\Image_Recognition\OpenCV Tools\opencv_createsamples.exe" -info "Image_Recognition/Image_Dataset/positive.txt" -w 24 -h 24 -num 1000 -vec "Image_Dataset/positive.vec"
+
+>>>>>>> e9375f74a018b98a704d9bab3bcab04df0353650
 
 Running Training:
 checks the docs at https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html
 
+<<<<<<< HEAD
 "C:\UCL\IGGY\Image_Recognition\OpenCV Tools\opencv_traincascade.exe" --annotations="C:\UCL\IGGY\Image_Recognition\Image_Dataset\positive.txt" --images="C:\UCL\IGGY\Image_Recognition\Image_Dataset\Positive" -data "C:\UCL\IGGY\Image_Recognition\Image_Dataset\Cascade" -vec "C:\UCL\IGGY\Image_Recognition\Image_Dataset\positive.vec" -bg "C:\UCL\IGGY\Image_Recognition\Image_Dataset\negative.txt" -w 24 -h 24 -numPos 120 -numNeg 11 -numStages 50 -precalcValBufSize 2048 -precalcIdxBufSize 2048 -numThreads 8 -bt RAB -weightTrimRate 0.95 -mode ALL
+=======
+"C:\Users\tmood\OneDrive - The College of Richard Collyer\Robotics\Better Robot Recognition\OpenCV Tools\opencv_traincascade.exe" --annotations="Image_Dataset/positive.txt" --images="Image_Dataset/Positive" -data Cascade/ -vec "Image_Dataset/positive.vec" -bg "Image_Dataset/negative.txt" -w 24 -h 24 -numPos 200 -numNeg 400 -numStages 20 -precalcValBufSize 2048 -precalcIdxBufSize 2048 -numThreads 8 -bt RAB -weightTrimRate 0.95 -mode ALL
+>>>>>>> e9375f74a018b98a704d9bab3bcab04df0353650
