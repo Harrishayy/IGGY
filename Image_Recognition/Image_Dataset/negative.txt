@@ -1,0 +1,11 @@
+Image_Dataset/Negative/IMG_5707.JPG
+Image_Dataset/Negative/IMG_5708.JPG
+Image_Dataset/Negative/IMG_5709.JPG
+Image_Dataset/Negative/IMG_5710.JPG
+Image_Dataset/Negative/IMG_5713.JPG
+Image_Dataset/Negative/IMG_5714.JPG
+Image_Dataset/Negative/IMG_5716.JPG
+Image_Dataset/Negative/IMG_5717.JPG
+Image_Dataset/Negative/IMG_5718.JPG
+Image_Dataset/Negative/IMG_5719.JPG
+Image_Dataset/Negative/IMG_5720.JPG
