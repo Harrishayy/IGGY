@@ -13,7 +13,7 @@ class Robot():
         if self.__debug:
             self.camera = cv2.VideoCapture(0)
         else:
-            self.arduino = serial.Serial(port='COM7', baudrate=115200, timeout=1)
+            self.arduino = serial.Serial(port='COM7', baudrate=500000, timeout=1)
             #self.servo_board = serial.Serial(port='COM3', baudrate=115200, timeout=1)
             self.motor_board = MotorBoard(self.arduino)
 

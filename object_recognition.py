@@ -6,7 +6,16 @@ DETECTION_THICKNESS = 2
 
 #Distance to object(mm) = focal length(mm) x real height(mm) x image height(mm) / object height(pixels) x sensor height(mm)
 
-CAMERA_WIDTH = 1920 #pixel width of camera
+#Camera settings for logitech c270
+CAMERA_WIDTH = 1920 #px
+CAMERA_HEIGHT = 1080 #px
+FOCAL_LENGTH = 4 # 4.0mm
+CAMERA_SENSOR_HEIGHT = 3.58 # 3.58mm
+ROBOT_ESTIMATED_HEIGHT = 500 # max robot height is 500mm
+
+# distance_to_robot = (FOCAL_LENGTH * ROBOT_ESTIMATED_HEIGHT * CAMERA_HEIGHT) / (height * CAMERA_SENSOR_HEIGHT)
+# distance becomes (CAMERA_CONSTANT / height) of robot in px
+CAMERA_CONSTANT = (FOCAL_LENGTH * ROBOT_ESTIMATED_HEIGHT * CAMERA_HEIGHT) /  CAMERA_SENSOR_HEIGHT
 CAMERA_CONSTANT = 1 #depends on focal length of camera, need to edit based on camera we are given
 
 # link to haar cascades for human body: https://github.com/opencv/opencv/tree/master/data/haarcascades

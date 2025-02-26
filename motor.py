@@ -7,22 +7,27 @@ class MotorBoard():
 
     def forward(self, speed:int):
         self.motor_l.set_speed(speed)
+        time.sleep(0.002)
         self.motor_r.set_speed(speed)
 
     def backward(self, speed:int):
         self.motor_l.set_speed(-speed)
+        time.sleep(0.002)
         self.motor_r.set_speed(-speed)
 
     def left(self, speed:int):
         self.motor_l.set_speed(-speed)
+        time.sleep(0.002)
         self.motor_r.set_speed(speed)
 
     def right(self, speed:int):
         self.motor_l.set_speed(speed)
+        time.sleep(0.002)
         self.motor_r.set_speed(-speed)
 
     def stop(self):
         self.motor_l.set_speed(0)
+        time.sleep(0.002)
         self.motor_r.set_speed(0)
 
     

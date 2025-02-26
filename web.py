@@ -6,7 +6,7 @@ import cv2
 
 app = Flask(__name__)
 app.secret_key = "qUYlpm55JRqJN5VQjgQaxnMTxrsLuZL8" #randomly generated 32 character string with base 62
-robot = Robot(debug=True)
+robot = Robot(debug=False)
 #robot.shutdown()
 
 @app.route("/")
@@ -31,18 +31,12 @@ def robot_move():
     if request.method == "POST":
         speed = request.json["speed"]
         direction = request.json["direction"]
-        time = request.json["time"]
-
 
         if speed != '':
             speed = int(speed)
         else:
             speed = 0
 
-        if time != '':
-            time = float(time)
-        else:
-            time = 0
 
         match direction:
             case 'w':
@@ -61,7 +55,7 @@ def robot_move():
                 robot.motor_board.stop()
 
 
-    s = speed, direction, time
+    s = speed, direction
 
     return jsonify({"response":s})
 
