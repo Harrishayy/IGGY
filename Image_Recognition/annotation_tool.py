@@ -39,11 +39,30 @@ class Annotate():
         pos_directory = self.file_directory + r"/Image_Dataset/positive.txt"
 
         selected_details = ""
+        total = len(self.selected)
         for coordinates in self.selected:
             # x y width height
-            selected_details += f"{coordinates[0][0]} {coordinates[0][1]} {coordinates[1][0] - coordinates[0][0]} {coordinates[1][1] - coordinates[0][1]} "
 
-        pos_details = f"{img_directory} {len(self.selected)} {selected_details[:-1]}"
+            x = coordinates[0][0]
+            y = coordinates[0][1]
+            width = coordinates[1][0] - coordinates[0][0]
+            height = coordinates[1][1] - coordinates[0][1]
+
+            image_file = self.file_directory + "/Image_Dataset/" + img_directory
+
+            img = cv2.imread(image_file)
+
+            # Get the dimensions of the image
+            image_height, image_width, channels = img.shape
+
+            if (x + width) > image_width or (y + height) > image_height:
+                total = total - 1
+                print("Image selection out of bound, skipping selected region.")
+                continue
+
+            selected_details += f"{x} {y} {width} {height} "
+
+        pos_details = f"{img_directory} {total} {selected_details[:-1]}"
 
         with open(pos_directory, "r") as pos_file:
             text = pos_file.read()
