@@ -1,20 +1,34 @@
-#include <Arduino_OV767X.h>
-
-unsigned short pixels[640 * 480]; // QCIF: 176x144 X 2 bytes per pixel (RGB565)
-
-void camInit(void){
-  writeReg(0x12, 0x80);
-  _delay_ms(100);
-  wrSensorRegs8_8(ov7675_default_regs);
-  writeReg(REG_COM10, 32);//PCLK does not toggle on HBLANK.
-}
+#include <Arduino_APDS9960.h>
 
 void setup() {
-  // put your setup code here, to run once:
-
+  if (!APDS.begin()) {
+    Serial.println("Could not detect gesture sensor");
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+   if (APDS.gestureAvailable()) {
+    int gesture = APDS.readGesture();
+
+    switch (gesture) {
+      case GESTURE_UP:
+        Serial.println("Up");
+        break;
+
+      case GESTURE_DOWN:
+        Serial.println("Down");
+        break;
+
+      case GESTURE_LEFT:
+        Serial.println("Left");
+        break;
+
+      case GESTURE_RIGHT:
+        Serial.println("Right");
+        break;
+
+      default:
+        break;
+    }
 
 }
