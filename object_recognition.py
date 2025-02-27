@@ -31,7 +31,7 @@ def detect_object(img_data) -> list:
     #tutorial for use in https://medium.com/@vipulgote4/guide-to-make-custom-haar-cascade-xml-file-for-object-detection-with-opencv-6932e22c3f0e
     robot_detection_data = cv2.CascadeClassifier("cascade.xml")
     
-    found = robot_detection_data.detectMultiScale(img_gray, minNeighbors=30, minSize=(20, 20))
+    found = robot_detection_data.detectMultiScale(img_gray, minNeighbors=10, minSize=(20, 20))
     
     return found
 

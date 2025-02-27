@@ -6,7 +6,7 @@ import cv2
 
 app = Flask(__name__)
 app.secret_key = "qUYlpm55JRqJN5VQjgQaxnMTxrsLuZL8" #randomly generated 32 character string with base 62
-robot = Robot(debug=False)
+robot = Robot(debug=True)
 #robot.shutdown()
 
 @app.route("/")
