@@ -1,4 +1,8 @@
 #include <Arduino_APDS9960.h>
+#include <PDM.h>
+
+// memory buffer to store samples from the microphone, each sample will use 
+short sample_buffer[256];
 
 void setup() {
   if (!APDS.begin()) {

@@ -4,10 +4,12 @@ import cv2
 
 from leg import Leg
 from motor import MotorBoard, Motor
+from camera import Camera
 
 class Robot():
     def __init__(self, debug:bool=False) -> None:
         self.__debug = debug
+        self.camera = Camera()
 
     def initialise(self) -> None:
         if self.__debug:
@@ -25,6 +27,9 @@ class Robot():
     def shutdown(self) -> None:
         if not self.__debug:
             self.arduino.close()
+
+    def autonomous(self) -> None:
+        img = self.camera.read()
 
             
     def run(self) -> None:  

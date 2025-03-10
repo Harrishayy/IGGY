@@ -25,6 +25,11 @@ def terminate():
     robot.shutdown()
     return redirect(url_for("main_page"))
 
+@app.route("/autonomous")
+def autonomous_mobility():
+    robot.autonomous()
+    return jsonify({"response":"Initiating autonomous control"})
+
 
 @app.route("/robot-move", methods=["POST"])
 def robot_move():
