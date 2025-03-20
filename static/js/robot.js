@@ -9,10 +9,23 @@ function move_robot(direction) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(response) {
-            console.log(response);
+            console.log(response["log"]);
         }
     });
 };
+
+function accelerometer(){
+    $.ajax({
+        url: "/accelerometer",
+        type: "POST",
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(response) {
+            console.log(response["log"]);
+        }
+    });
+}
 
 //adds a listener to the webpage so that we can use w,a,s,d controls
 document.addEventListener('keydown', function(event) {
@@ -32,3 +45,5 @@ document.addEventListener('keydown', function(event) {
         move_robot('stop');
     }
 });
+
+setInterval(accelerometer, 1000);

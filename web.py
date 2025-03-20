@@ -6,7 +6,7 @@ import cv2
 
 app = Flask(__name__)
 app.secret_key = "qUYlpm55JRqJN5VQjgQaxnMTxrsLuZL8" #randomly generated 32 character string with base 62
-robot = Robot(debug=True)
+robot = Robot(debug=False)
 #robot.shutdown()
 
 @app.route("/")
@@ -42,7 +42,6 @@ def robot_move():
         else:
             speed = 0
 
-
         match direction:
             case 'w':
                 robot.motor_board.forward(speed)
@@ -62,7 +61,15 @@ def robot_move():
 
     s = speed, direction
 
-    return jsonify({"response":s})
+
+
+    return jsonify({"Message":s})
+
+@app.route("/accelerometer", methods=["POST"])
+def acc():
+    data = robot.read_accelerometer()
+
+    return jsonify({"log":data})
 
 
 @app.route("/camera_feed")
@@ -101,3 +108,8 @@ def generate_frames():
 if __name__ == "__main__":
     app.debug = True
     app.run(host="0.0.0.0")
+
+    try:
+        robot.shutdown()
+    except Exception as e:
+        print("Error shutting down robot:\n" + e)

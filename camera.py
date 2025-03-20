@@ -6,7 +6,7 @@ class Camera():
     def __init__(self):
         self.width = 176
         self.height = 144
-        self.__arduino = serial.Serial(port='COM8', baudrate=1000000, timeout=1)
+        #self.__arduino = serial.Serial(port='COM8', baudrate=1000000, timeout=1)
     
     def read(self):
         self.__arduino.write(b"r")

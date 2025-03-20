@@ -52,24 +52,11 @@ def draw_detection(img, found:list) -> None:
 
 
 
-def calculate_distance(detected_objects:list):
+def calculate_distance(height:float) -> float:
     """
-    Calculates the approximate distance to the object in the image
+    Calculates the approximate distance to the object given the height in pixels of the object in the image.
     """
     
-    if len(detected_objects) > 0:
-        for x,y,width,height in detected_objects:
-            mid_x = x + (width/2)
-            mid_y = y + (height/2)
-            
-            distance_to_robot = CAMERA_CONSTANT / height #distance in mm
-            
-            print(distance_to_robot)
-            
-            if distance_to_robot < 500: #if robot is closer than 50cm
-            
-                if mid_x < (CAMERA_WIDTH/2): #if robot to the left
-                    print("move right")
-                    
-                if mid_x > (CAMERA_WIDTH/2):  #if robot to the right
-                    print("move left")
+    distance_to_robot = CAMERA_CONSTANT / height #distance in mm
+    
+    return distance_to_robot
