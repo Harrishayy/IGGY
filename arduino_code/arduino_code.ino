@@ -16,16 +16,6 @@
 #define FAN_PIN 9
 #define MOTORON_ADDRESS 0x59
 
-//set motor speed
-void setFanSpeed(uint8_t motor, int16_t speed) {
-    Wire.beginTransmission(MOTORON_ADDRESS);
-    Wire.write(0xE1);
-    Wire.write(motor);
-    Wire.write(speed & 0xFF);        // Low byte
-    Wire.write((speed >> 8) & 0xFF); // High byte
-    Wire.endTransmission();
-}
-
 //fan control
 float FAN_GAIN = 100.0;
 int pwm = 0;
@@ -41,6 +31,7 @@ float humidity;
 
 String data;
 String output;
+unsigned int acc_data[6]; 
 
 int index = -1;
 int motor_id = 0;
@@ -56,7 +47,17 @@ unsigned int led_interval = 500; //milliseconds
 
 DHT dht(DHTPIN, DHTTYPE);
 
+//set motor speed for fan
+void setFanSpeed(uint8_t motor, int16_t speed) {
+  Wire.beginTransmission(MOTORON_ADDRESS);
+  Wire.write(0xE1);
+  Wire.write(motor);
+  Wire.write(speed & 0xFF);        // Low byte
+  Wire.write((speed >> 8) & 0xFF); // High byte
+  Wire.endTransmission();
+}
 
+//turn voltage to pwm
 void fanVoltage(float temp)
 {
   //use digital potentiometer to adjust voltage of H bridge ciruit
@@ -167,7 +168,7 @@ void setup()
   Wire.endTransmission();   
   // Start I2C Transmission 
   Wire.beginTransmission(ADXL345); 
-  // Select data format register 
+  // Select data format register 69
   Wire.write(0x31); 
   // Self test disabled, 4-wire interface, Full resolution, Range = +/-2g 
   Wire.write(0x08); 
@@ -207,7 +208,6 @@ void loop() {
     }
   }
 
-
   //calling to set motor
   if (id == 0 || id == 1)
   {
@@ -219,7 +219,7 @@ void loop() {
   //fetch accelerometer data
   if (id == 2)
   {
-    unsigned int data[6]; 
+    
     for(int i = 0; i < 6; i++) 
     {   
       // Start I2C Transmission   
@@ -234,25 +234,31 @@ void loop() {
       // xAccl lsb, xAccl msb, yAccl lsb, yAccl msb, zAccl lsb, zAccl msb   
       if(Wire.available() == 1)   
       {     
-        data[i] = Wire.read();   
+        acc_data[i] = Wire.read();   
       } 
     }   
     // Convert the data to 10-bits 
-    int xAccl = (((data[1] & 0x03) * 256) + data[0]); 
-    if(xAccl > 511) 
+    X_raw = (((acc_data[1] & 0x03) * 256) + acc_data[0]); 
+    if(X_raw > 511) 
     {   
-    xAccl -= 1024; 
+      X_raw -= 1024; 
     } 
-    int yAccl = (((data[3] & 0x03) * 256) + data[2]); 
-    if(yAccl > 511) 
+
+    Y_raw = (((acc_data[3] & 0x03) * 256) + acc_data[2]); 
+    if(Y_raw > 511) 
     {   
-    yAccl -= 1024; 
+      Y_raw -= 1024; 
     } 
-    int zAccl = (((data[5] & 0x03) * 256) + data[4]); 
-    if(zAccl > 511) 
+
+    Z_raw = (((acc_data[5] & 0x03) * 256) + acc_data[4]); 
+    if(Z_raw > 511) 
     {   
-    zAccl -= 1024; 
-    }   
+      Z_raw -= 1024; 
+    }
+    
+    X_out = X_raw * 0.0039 * 9.81;
+    Y_out = Y_raw * 0.0039 * 9.81;
+    Z_out = Z_raw * 0.0039 * 9.81;
     
     // Output data to serial monitor 
     dtostrf(X_out, 4, 2, x_str);

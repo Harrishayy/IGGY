@@ -1,4 +1,3 @@
-Positive/Screenshot 2025-03-19 at 2.42.45.png 1 248 76 283 450
 Positive/Photo_1.png 1 291 91 251 366
 Positive/Photo_10.png 1 482 132 160 299
 Positive/Photo_100.png 1 335 173 149 308

@@ -1,5 +1,7 @@
 import time
 
+TIME_DELAY = 0.008
+
 class MotorBoard():
     def __init__(self, arduino:object):
         self.motor_l = Motor(arduino, 0)
@@ -7,27 +9,27 @@ class MotorBoard():
 
     def forward(self, speed:int):
         self.motor_l.set_speed(speed)
-        time.sleep(0.002)
+        time.sleep(TIME_DELAY)
         self.motor_r.set_speed(speed)
 
     def backward(self, speed:int):
         self.motor_l.set_speed(-speed)
-        time.sleep(0.002)
+        time.sleep(TIME_DELAY)
         self.motor_r.set_speed(-speed)
 
     def left(self, speed:int):
         self.motor_l.set_speed(-speed)
-        time.sleep(0.002)
+        time.sleep(TIME_DELAY)
         self.motor_r.set_speed(speed)
 
     def right(self, speed:int):
         self.motor_l.set_speed(speed)
-        time.sleep(0.002)
+        time.sleep(TIME_DELAY)
         self.motor_r.set_speed(-speed)
 
     def stop(self):
         self.motor_l.set_speed(0)
-        time.sleep(0.002)
+        time.sleep(TIME_DELAY)
         self.motor_r.set_speed(0)
 
     
