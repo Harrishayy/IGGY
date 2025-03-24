@@ -1,41 +1,34 @@
 import serial
 import numpy as np
 import cv2 as cv
+import time
+import readimage
+import datetime
+
+
 
 class Camera():
     def __init__(self):
         self.width = 176
         self.height = 144
-        #self.__arduino = serial.Serial(port='COM8', baudrate=1000000, timeout=1)
-    
+        self.__arduino = serial.Serial('/dev/cu.usbmodem101', baudrate=9600, timeout=2)
     def read(self):
+         # Send a command to tell Arduino to capture one frame
         self.__arduino.write(b"r")
-
-        #receive the image data
-        message = self.__arduino.read(self.width * self.height * 2)  #read number of raw bytes of pixels
-
-        #check if the expected amount of data was received
-        if len(message) != self.width * self.height * 2:
-            print(f"Incomplete data received: {len(message)} bytes.")
-            return
         
-        rgb565_data = np.frombuffer(message, dtype=np.uint16)
+        # Give Arduino a moment to capture and send
+        time.sleep(2)
 
-        #convert RGB565 to RGB888
-        rgb888_data = self.rgb565_to_rgb888(rgb565_data)
+        # We expect 176 * 144 * 2 bytes for RGB565
+        bytes_to_read = self.width * self.height * 2
 
-        rgb_image = rgb888_data.reshape((self.height, self.width, 3))
+        # Read raw bytes
+        data = self.__arduino.read(bytes_to_read)
 
-        return rgb_image
-
-    def rgb565_to_rgb888(self, rgb565_data):
-        r = ((rgb565_data >> 11) & 0x1F) * 255 // 31
-        g = ((rgb565_data >> 5) & 0x3F) * 255 // 63
-        b = (rgb565_data & 0x1F) * 255 // 31
-
-        #stack RGB channels together in the form RGB
-        return np.stack((r, g, b), axis=-1).astype(np.uint8)
-
+        # Decode using your readimage.py logic (Format.RGB565)
+        image_np = readimage.get_image(readimage.Format.RGB565, self.width, self.height, ser_data=data)
+        
+        return image_np
 
 if __name__ == "__main__":
     cam = Camera()
