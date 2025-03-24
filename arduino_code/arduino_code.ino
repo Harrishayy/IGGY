@@ -1,6 +1,11 @@
 
 #include <Wire.h> //communicate with I2C devices
-//#include "DHT.h" //library for Digital Humidity Sensor
+#include <DHT.h> //library for Digital Humidity Sensor
+
+#define MOTOR_SPEED_1_PIN 6 //set pwm speed 0-255
+#define MOTOR_SPEED_2_PIN 5 //set pwm speed 0-255
+#define MOTOR_1_PIN 7 //set digital to alternate direction
+#define MOTOR_2_PIN 4
 
 #define DHTPIN 8
 #define DHTTYPE DHT11
@@ -9,12 +14,35 @@
 
 #define ADXL345 0x53 // The ADXL345 sensor I2C address
 
+#define FAN_PIN 9
+#define MOTORON_ADDRESS 0x59
+
+//set motor speed
+void setFanSpeed(uint8_t motor, int16_t speed) {
+    Wire.beginTransmission(MOTORON_ADDRESS);
+    Wire.write(0xE1);
+    Wire.write(motor);
+    Wire.write(speed & 0xFF);        // Low byte
+    Wire.write((speed >> 8) & 0xFF); // High byte
+    Wire.endTransmission();
+}
+
+//fan control
+float FAN_GAIN = 100.0;
+int pwm = 0;
+
+//ADXL345 variables
 int16_t X_raw, Y_raw, Z_raw;
 float X_out, Y_out, Z_out;
 char x_str[10], y_str[10], z_str[10];
 
+//DHT11 variables
+float temp;
+float humidity;
+
 String data;
 String output;
+
 int index = -1;
 int motor_id = 0;
 int speed = 0;
@@ -26,17 +54,24 @@ unsigned long loop_time = 0;
 unsigned long initial_time = 0;
 unsigned int led_interval = 500; //milliseconds
 
-#define MOTOR_SPEED_1_PIN 6 //set pwm speed 0-255
-#define MOTOR_SPEED_2_PIN 5 //set pwm speed 0-255
-#define MOTOR_1_PIN 7 //set digital to alternate direction
-#define MOTOR_2_PIN 4
 
-//DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE);
 
 
 void fanVoltage(float temp)
 {
   //use digital potentiometer to adjust voltage of H bridge ciruit
+  int pwm = floor(FAN_GAIN * temp);
+
+  if (pwm > 3200){
+    pwm = 3200;
+  }
+
+  Serial.print("pwm: ");
+  Serial.println(pwm);
+
+  analogWrite(FAN_PIN, 255);
+  setFanSpeed(1, pwm);
 }
 
 void set_motor(int motor_id, int speed)
@@ -100,6 +135,7 @@ void setup()
   pinMode(MOTOR_2_PIN, OUTPUT);
   pinMode(MOTOR_SPEED_1_PIN, OUTPUT);
   pinMode(MOTOR_SPEED_2_PIN, OUTPUT);
+  pinMode(FAN_PIN, OUTPUT);
 
   Serial.println("Initializing ADXL345...");
   Wire.begin();
@@ -121,27 +157,40 @@ void setup()
   Wire.write(8);  // Enable measurement
   Wire.endTransmission();
 
-  delay(10);
+  delay(100);
+
+  Serial.println("Initialising DHT11...");
+  dht.begin();
+  Serial.println("DHT11 Connected!");
+
+  Serial.println("Initialising Motoron motor driver...");
+
+  // Reset controller
+  Wire.beginTransmission(MOTORON_ADDRESS);
+  Wire.write(0x14); // Reset command
+  Wire.endTransmission();
+
+  delay(100);
   
 }
 
 
 void loop() {
-  //continuous loop waiting until connection is made
-  while (!Serial.available());
+  id = -1;
 
-  //data in format "pin/position"
-  data = Serial.readString();
+  if (Serial.available()){
+    //data in format "pin/position"
+    data = Serial.readString();
+    Serial.flush();
 
-  //find index of split between motor id and speed
-  index = data.indexOf('/');
-  
-  if (index > -1){
-    id = data.substring(0, index).toInt();
+    //find index of split between motor id and speed
+    index = data.indexOf('/');
+    
+    if (index > -1){
+      id = data.substring(0, index).toInt();
+    }
   }
-  else{
-    id = -1;
-  }
+
 
   //calling to set motor
   if (id == 0 || id == 1)
@@ -185,8 +234,6 @@ void loop() {
     Serial.println(output);
   }
 
-  
-
 
   loop_time = millis();
 
@@ -198,19 +245,23 @@ void loop() {
     {
       digitalWrite(LED_PIN, LOW);
       led_state = false;
-      //Serial.println("Off");
     }
     else
     {
       digitalWrite(LED_PIN, HIGH);
       led_state = true;
-      //Serial.println("On");
     }
+
+    //fan control in loop as only really needs to be checked every second, so using same loop to reduce memory requirements of an additional checking loop for DHT11
+    temp = dht.readTemperature();
+    humidity = dht.readHumidity();
+
+    Serial.print("Temperature: ");
+    Serial.println(temp);
+
+    fanVoltage(temp);
   }
 
-  //float temp = dht.readTemperature();
-  //float humidity = dht.readHumidity();
-
-  //fanVoltage(temp);
+  
 
 }
