@@ -5,6 +5,7 @@ import cv2
 from leg import Leg
 from motor import MotorBoard, Motor
 from camera import Camera
+from emotions import Face
 from object_recognition import detect_object, calculate_distance
 
 DEAD_ZONE = 2
@@ -13,6 +14,7 @@ class Robot():
     def __init__(self, debug:bool=False) -> None:
         self.__debug = debug
         self.camera = Camera()
+        self.emotions = Face()
 
     def initialise(self) -> None:
         if self.__debug:
@@ -26,6 +28,24 @@ class Robot():
     def shutdown(self) -> None:
         if not self.__debug:
             self.arduino.close()
+    def emotions(self) -> None:
+        #happy
+        if (1.5 >= self.emotion_meter > 1.0):
+            self.state = 1
+        #sad
+        elif(1.0 >= self.emotion_meter > 0.5):
+            self.state = 2
+        #sleepy
+        elif(0.5 > self.emotion_meter >= 0):
+            self.state = 3
+        #angry
+        elif(self.emotion_meter == 2.0):
+            self.state = 4
+        else:
+            self.state = 3
+
+        
+        pass
 
     def autonomous(self) -> None:
         following = True
