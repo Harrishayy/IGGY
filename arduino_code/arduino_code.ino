@@ -1,5 +1,8 @@
 #include <Wire.h> //communicate with I2C devices
 #include <DHT.h> //library for Digital Humidity Sensor
+#include <Motoron.h> //library for motoron motor driver
+
+MotoronI2C md;
 
 #define MOTOR_SPEED_1_PIN 6 //set pwm speed 0-255
 #define MOTOR_SPEED_2_PIN 5 //set pwm speed 0-255
@@ -49,19 +52,13 @@ DHT dht(DHTPIN, DHTTYPE);
 
 //set motor speed for fan
 void setFanSpeed(uint8_t motor, int16_t speed) {
-  Wire.beginTransmission(MOTORON_ADDRESS);
-  Wire.write(0xE1);
-  Wire.write(motor);
-  Wire.write(speed & 0xFF);        // Low byte
-  Wire.write((speed >> 8) & 0xFF); // High byte
-  Wire.endTransmission();
+  mc.setSpeed(1, speed);
 }
 
 //turn voltage to pwm
 void fanVoltage(float temp)
-{
-  //use digital potentiometer to adjust voltage of H bridge ciruit
-  int pwm = floor(FAN_GAIN * temp);
+{ 
+  pwm = floor(FAN_GAIN * temp);
 
   if (pwm > 3200){
     pwm = 3200;
@@ -183,12 +180,13 @@ void setup()
   dht.begin();
   Serial.println("DHT11 Connected!");
 
-  Serial.println("Initialising Motoron motor driver...");
+  Serial.println("Initialising Motoron Motor Driver...");
 
-  // Reset controller
-  Wire.beginTransmission(MOTORON_ADDRESS);
-  Wire.write(0x14); // Reset command
-  Wire.endTransmission();
+  md.reinitialize();    // Bytes: 0x96 0x74
+  md.disableCrc();      // Bytes: 0x8B 0x04 0x7B 0x43
+  md.clearResetFlag();
+
+  Serial.println("Motoron Motor Driver Connected!");
 
   delay(100);
 }
