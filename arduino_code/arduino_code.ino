@@ -110,6 +110,8 @@ void set_motor(int motor_id, int speed)
       else if (speed < 0)
       {
         speed = -speed;
+        Serial.print("Speed: ");
+        Serial.println(speed);
         analogWrite(MOTOR_SPEED_2_PIN, speed);
         digitalWrite(MOTOR_2_PIN, LOW);
       }

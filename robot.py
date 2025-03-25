@@ -121,7 +121,12 @@ class Robot():
         #     self.read_accelerometer()
         #     time.sleep(1)
 
-        pass
+        running = True
+        
+        while (running):
+
+            continue
+
 
 
 if __name__ == "__main__":

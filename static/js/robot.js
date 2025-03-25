@@ -41,9 +41,9 @@ document.addEventListener('keydown', function(event) {
     else if(event.key == 'd') {
         move_robot('d');
     }
-    else if(event.key == 'stop') {
+    else if(event.key == 'q') {
         move_robot('stop');
     }
 });
 
-setInterval(accelerometer, 1000);
+//setInterval(accelerometer, 1000);
