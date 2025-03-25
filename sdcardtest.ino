@@ -27,6 +27,7 @@ void drawBmp(const char *filename, int16_t x, int16_t y);
 void listFiles();
 int emotion = 1;
 int emotion_prev = 1;
+int tired = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -73,7 +74,7 @@ void loop() {   // calibration
     int y = map(p.y, TS_YMIN, TS_YMAX, 0, 320);
     Serial.println(p.z);
 
-    if (p.z < 300)  {
+    if (p.z < 400)  {
       emotion = 4;
     }
     else {
@@ -82,8 +83,17 @@ void loop() {   // calibration
   }
 
   if (emotion == emotion_prev)  {
+    tired++;
+    // Serial.println(tired);
+    if (tired > 10000)  {
+      drawBmp("SLEEPY.BMP", 0, 0);
+      emotion = 3;
+      emotion_prev = emotion;
+      tired = 0;
+    }    
   }
   else  {
+
     switch(emotion) {
       case 1:   // happy
         drawBmp("HAPPY.BMP", 0, 0);
@@ -160,7 +170,7 @@ void drawBmp(const char *filename, int16_t x, int16_t y) {
       uint16_t color = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
       
       // Write pixel to TFT
-      tft.drawPixel(x + colIdx, y + rowIdx, color);
+      tft.drawPixel(320 - (x + colIdx), y + rowIdx, color);
     }
   }
 
