@@ -28,6 +28,8 @@ void listFiles();
 int emotion = 1;
 int emotion_prev = 1;
 int tired = 0;
+String switch_emotion_string;
+int switch_emotion_int;
 
 void setup() {
   // put your setup code here, to run once:
@@ -62,7 +64,10 @@ void setup() {
 void loop() {   // calibration
   // get serial input
   if (Serial.available()) {
-    emotion = Serial.read();
+    switch_emotion_string = Serial.readString();
+    if(switch_emotion_string.length() > 0) {
+      emotion = switch_emotion_string.toInt();
+    }
   }
 
   TSPoint p = ts.getPoint();

@@ -11,7 +11,7 @@ class Camera():
     def __init__(self):
         self.width = 176
         self.height = 144
-        self.__arduino = serial.Serial('/dev/cu.usbmodem101', baudrate=9600, timeout=2)
+        #self.__arduino = serial.Serial('/dev/cu.usbmodem101', baudrate=9600, timeout=2)
         
     def read(self):
          # Send a command to tell Arduino to capture one frame

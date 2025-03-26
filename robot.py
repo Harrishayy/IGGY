@@ -11,21 +11,23 @@ from object_recognition import detect_object, calculate_distance
 DEAD_ZONE = 2
 MAX_ACC = 1
 
+DECREMENT_VAL = 1
+
 class Robot():
     def __init__(self, debug:bool=False) -> None:
         self.__debug = debug
-        #self.camera = Camera()
-        #self.emotions = Face()
-        self.following = False
+        self.camera = Camera()
+        self.emote = Face()
 
     def initialise(self) -> None:
         if self.__debug:
             self.camera = cv2.VideoCapture(0)
         else:
-            self.arduino = serial.Serial(port="COM5", baudrate=500000, timeout=1)
-            self.motor_board = MotorBoard(self.arduino)
+            pass
+            #self.arduino = serial.Serial(port="COM5", baudrate=500000, timeout=1)
+            #self.motor_board = MotorBoard(self.arduino)
 
-        time.sleep(1) #give time for arduino to setup
+        #time.sleep(1) #give time for arduino to setup
 
     def shutdown(self) -> None:
         if not self.__debug:
@@ -33,22 +35,21 @@ class Robot():
 
     def emotions(self) -> None:
         #happy
-        if (1.5 >= self.emotion_meter > 1.0):
-            self.state = 1
+        if (150 >= self.emotion_meter > 100):
+            self.emote.state = 1
         #sad
-        elif(1.0 >= self.emotion_meter > 0.5):
-            self.state = 2
+        elif(100 >= self.emotion_meter > 50):
+            self.emote.state = 2
         #sleepy
-        elif(0.5 > self.emotion_meter >= 0):
-            self.state = 3
+        elif(50 > self.emotion_meter >= 0):
+            self.emote.state = 3
         #angry
-        elif(self.emotion_meter == 2.0):
-            self.state = 4
+        elif(self.emotion_meter == 200):
+            self.emote.state = 4
+        #error handling
         else:
-            self.state = 3
-
+            self.emote.state = 3
         
-        pass
 
     def autonomous(self) -> None:
         self.following = True
@@ -142,7 +143,26 @@ class Robot():
         
             
     def run(self) -> None:
-        pass
+        #test motor driver
+        # self.motor_board.forward(255)
+        # time.sleep(0.5)
+        # self.motor_board.stop()
+        # time.sleep(0.5)
+        # self.motor_board.backward(255)
+        # time.sleep(1)
+        # self.motor_board.forward(0)
+        if(self.emote.state != 200):
+            self.emote.emotion_meter -= self.emote.emotion_meter
+        
+        
+            
+        #test acc
+        # while True:
+        #     self.read_accelerometer()
+        #     time.sleep(1)
+
+        
+
 
 
 
