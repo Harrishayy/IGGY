@@ -23,30 +23,32 @@ class Robot():
         if self.__debug:
             self.camera = cv2.VideoCapture(0)
         else:
-            self.arduino = serial.Serial(port="COM5", baudrate=500000, timeout=1)
-            self.motor_board = MotorBoard(self.arduino)
+            pass
+            #self.arduino = serial.Serial(port="COM5", baudrate=500000, timeout=1)
+            #self.motor_board = MotorBoard(self.arduino)
 
-        time.sleep(1) #give time for arduino to setup
+        #time.sleep(1) #give time for arduino to setup
 
     def shutdown(self) -> None:
         if not self.__debug:
-            self.arduino.close()
+            #self.arduino.close()
+            pass
     def emotions(self) -> None:
         #happy
         if (150 >= self.emotion_meter > 100):
-            self.state = 1
+            self.emote.state = 1
         #sad
         elif(100 >= self.emotion_meter > 50):
-            self.state = 2
+            self.emote.state = 2
         #sleepy
         elif(50 > self.emotion_meter >= 0):
-            self.state = 3
+            self.emote.state = 3
         #angry
         elif(self.emotion_meter == 200):
-            self.state = 4
+            self.emote.state = 4
         #error handling
         else:
-            self.state = 3
+            self.emote.state = 3
         
 
     def autonomous(self) -> None:
@@ -149,8 +151,9 @@ class Robot():
         # self.motor_board.backward(255)
         # time.sleep(1)
         # self.motor_board.forward(0)
-        if(self.state != 200):
-            self.emotion_meter -= self.emotion_meter
+        if(self.emote.state != 200):
+            self.emote.emotion_meter -= self.emote.emotion_meter
+        
         
             
         #test acc

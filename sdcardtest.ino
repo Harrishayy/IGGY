@@ -28,6 +28,8 @@ void listFiles();
 int emotion = 1;
 int emotion_prev = 1;
 int tired = 0;
+String switch_emotion_string;
+int switch_emotion_int;
 
 void setup() {
   // put your setup code here, to run once:
@@ -62,6 +64,10 @@ void setup() {
 void loop() {   // calibration
   // get serial input
   if (Serial.available()) {
+    switch_emotion_string = Serial.readstring();
+    if(length(switch_emotion_string)>0){
+      switch_emotion_int = switch_emotion_string.toInt();
+    }
     emotion = Serial.read();
   }
 
@@ -94,7 +100,7 @@ void loop() {   // calibration
   }
   else  {
 
-    switch(emotion) {
+    switch(switch_emotion_int) {
       case 1:   // happy
         drawBmp("HAPPY.BMP", 0, 0);
         emotion_prev = emotion;
