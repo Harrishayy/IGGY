@@ -17,13 +17,16 @@ def home():
 @app.route("/robot/")
 def main_page():
     robot.initialise()
+    robot.run()
     return render_template("robot.html")
+
 
 @app.route("/kill/")
 def terminate():
     robot.motor_board.stop()
     robot.shutdown()
     return redirect(url_for("main_page"))
+
 
 @app.route("/autonomous")
 def autonomous_mobility():
@@ -43,30 +46,29 @@ def robot_move():
             speed = 0
 
         match direction:
-            case 'w':
+            case "w":
                 robot.motor_board.forward(speed)
 
-            case 's':
+            case "s":
                 robot.motor_board.backward(speed)
 
-            case 'a':
+            case "a":
                 robot.motor_board.left(speed)
 
-            case 'd':
+            case "d":
                 robot.motor_board.right(speed)
 
             case "stop":
+                robot.following = False
                 robot.motor_board.stop()
 
             case "auto":
                 robot.autonomous()
 
-
     s = speed, direction
 
-
-
     return jsonify({"Message":s})
+
 
 @app.route("/accelerometer", methods=["POST"])
 def acc():
@@ -82,6 +84,7 @@ def video_feed():
     """
 
     return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
+
 
 def generate_frames():
     """
@@ -107,6 +110,7 @@ def generate_frames():
 
             yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + outlined_frame + b'\r\n')  
+
 
 if __name__ == "__main__":
     app.debug = True

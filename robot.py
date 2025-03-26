@@ -14,8 +14,9 @@ MAX_ACC = 1
 class Robot():
     def __init__(self, debug:bool=False) -> None:
         self.__debug = debug
-        self.camera = Camera()
-        self.emotions = Face()
+        #self.camera = Camera()
+        #self.emotions = Face()
+        self.following = False
 
     def initialise(self) -> None:
         if self.__debug:
@@ -29,6 +30,7 @@ class Robot():
     def shutdown(self) -> None:
         if not self.__debug:
             self.arduino.close()
+
     def emotions(self) -> None:
         #happy
         if (1.5 >= self.emotion_meter > 1.0):
@@ -49,13 +51,13 @@ class Robot():
         pass
 
     def autonomous(self) -> None:
-        following = True
+        self.following = True
         Kp = 5
 
         left_speed = 0
         right_speed = 0
 
-        while following:
+        while self.following:
             target = self.find_target()
 
             if target is None:
@@ -140,20 +142,6 @@ class Robot():
         
             
     def run(self) -> None:
-        #test motor driver
-        # self.motor_board.forward(255)
-        # time.sleep(0.5)
-        # self.motor_board.stop()
-        # time.sleep(0.5)
-        # self.motor_board.backward(255)
-        # time.sleep(1)
-        # self.motor_board.forward(0)
-
-        #test acc
-        # while True:
-        #     self.read_accelerometer()
-        #     time.sleep(1)
-
         pass
 
 

@@ -4,10 +4,10 @@
 
 MotoronI2C md;
 
-#define MOTOR_SPEED_1_PIN 6 //set pwm speed 0-255
-#define MOTOR_SPEED_2_PIN 5 //set pwm speed 0-255
-#define MOTOR_1_PIN 7 //set digital to alternate direction
-#define MOTOR_2_PIN 4
+#define MOTOR_SPEED_1_PIN 5 //set pwm speed 0-255
+#define MOTOR_SPEED_2_PIN 6 //set pwm speed 0-255
+#define MOTOR_1_PIN 4 //set digital to alternate direction
+#define MOTOR_2_PIN 7
 
 #define DHTPIN 8
 #define DHTTYPE DHT11
@@ -20,7 +20,7 @@ MotoronI2C md;
 #define MOTORON_ADDRESS 0x59
 
 //fan control
-float FAN_GAIN = 100.0;
+float FAN_GAIN = 200.0;
 int pwm = 0;
 
 //ADXL345 variables
@@ -52,27 +52,43 @@ DHT dht(DHTPIN, DHTTYPE);
 
 //set motor speed for fan
 void setFanSpeed(uint8_t motor, int16_t speed) {
-  mc.setSpeed(1, speed);
+  md.setSpeed(1, speed);
 }
 
 //turn voltage to pwm
 void fanVoltage(float temp)
 { 
-  pwm = floor(FAN_GAIN * temp);
+  pwm = floor(FAN_GAIN * temp) - 4750;
 
   if (pwm > 3200){
     pwm = 3200;
   }
+  else if (pwm < 0){
+    pwm = 0;
+  }
 
-  Serial.print("pwm: ");
-  Serial.println(pwm);
+  if (temp <= 26){
+    pwm = 0;
+  }
 
-  analogWrite(FAN_PIN, 255);
+  // Serial.print("Temperature: ");
+  // Serial.println(temp);
+
+  // Serial.print("Fan PWM: ");
+  // Serial.println(pwm);
+
+  // analogWrite(FAN_PIN, 255);
   setFanSpeed(1, pwm);
 }
 
 void set_motor(int motor_id, int speed)
 {
+
+  Serial.print("Motor ID: ");
+  Serial.println(motor_id);
+  Serial.print("Motor speed: ");
+  Serial.println(speed);
+
   switch(motor_id)
   {
     case 0:
@@ -292,8 +308,7 @@ void loop() {
     temp = dht.readTemperature();
     humidity = dht.readHumidity();
 
-    Serial.print("Temperature: ");
-    Serial.println(temp);
+    
 
     fanVoltage(temp);
   }

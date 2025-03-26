@@ -28,21 +28,21 @@ function accelerometer(){
 }
 
 //adds a listener to the webpage so that we can use w,a,s,d controls
-document.addEventListener('keydown', function(event) {
-    if(event.key == 'w') {
-        move_robot('w');
+document.addEventListener("keydown", function(event) {
+    if(event.key == "w") {
+        move_robot("w");
     }
-    else if(event.key == 's') {
-        move_robot('s');
+    else if(event.key == "s") {
+        move_robot("s");
     }
-    else if(event.key == 'a') {
-        move_robot('a');
+    else if(event.key == "a") {
+        move_robot("a");
     }
-    else if(event.key == 'd') {
-        move_robot('d');
+    else if(event.key == "d") {
+        move_robot("d");
     }
-    else if(event.key == 'q') {
-        move_robot('stop');
+    else if(event.key == "q") {
+        move_robot("stop");
     }
 });
 

@@ -18,14 +18,14 @@ class MotorBoard():
         self.motor_r.set_speed(-speed)
 
     def left(self, speed:int):
-        self.motor_l.set_speed(-speed)
-        time.sleep(TIME_DELAY)
-        self.motor_r.set_speed(speed)
-
-    def right(self, speed:int):
         self.motor_l.set_speed(speed)
         time.sleep(TIME_DELAY)
         self.motor_r.set_speed(-speed)
+
+    def right(self, speed:int):
+        self.motor_l.set_speed(-speed)
+        time.sleep(TIME_DELAY)
+        self.motor_r.set_speed(speed)
 
     def stop(self):
         self.motor_l.set_speed(0)
