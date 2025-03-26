@@ -64,11 +64,10 @@ void setup() {
 void loop() {   // calibration
   // get serial input
   if (Serial.available()) {
-    switch_emotion_string = Serial.readstring();
-    if(length(switch_emotion_string)>0){
-      switch_emotion_int = switch_emotion_string.toInt();
+    switch_emotion_string = Serial.readString();
+    if(switch_emotion_string.length() > 0) {
+      emotion = switch_emotion_string.toInt();
     }
-    emotion = Serial.read();
   }
 
   TSPoint p = ts.getPoint();
@@ -100,7 +99,7 @@ void loop() {   // calibration
   }
   else  {
 
-    switch(switch_emotion_int) {
+    switch(emotion) {
       case 1:   // happy
         drawBmp("HAPPY.BMP", 0, 0);
         emotion_prev = emotion;
