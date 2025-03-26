@@ -9,6 +9,7 @@ from emotions import Face
 from object_recognition import detect_object, calculate_distance
 
 DEAD_ZONE = 2
+MAX_ACC = 1
 
 DECREMENT_VAL = 1
 
@@ -73,7 +74,18 @@ class Robot():
 
                 continue
 
+            else:
+                left_speed = right_speed
+
             ax, ay, az = self.read_accelerometer()
+
+            if (ax > MAX_ACC):
+                left_speed -= 5
+                right_speed -= 5
+            
+            else:
+                left_speed += 10
+                right_speed += 10
 
         
     def find_target(self) -> tuple:
@@ -101,7 +113,8 @@ class Robot():
         target = detected_balls[idx]
 
         return target
-    
+
+
     def read_accelerometer(self) -> tuple:
         string = "2/"
         self.arduino.write(bytes(string, encoding="utf-8"))
@@ -146,6 +159,7 @@ class Robot():
         #     time.sleep(1)
 
         
+
 
 
 

@@ -58,6 +58,9 @@ def robot_move():
             case "stop":
                 robot.motor_board.stop()
 
+            case "auto":
+                robot.autonomous()
+
 
     s = speed, direction
 

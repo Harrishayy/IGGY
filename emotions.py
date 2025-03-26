@@ -12,6 +12,6 @@ class Face():
     def read(self, state):
         self.state = emotions_dict[state]
         #define variable...
-        string = str(self.__id) + "/" + str(self.state)
+        string = str(self.state)
         self.__arduino.write(bytes(string, encoding="utf-8"))
         

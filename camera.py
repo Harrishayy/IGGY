@@ -12,12 +12,13 @@ class Camera():
         self.width = 176
         self.height = 144
         self.__arduino = serial.Serial('/dev/cu.usbmodem101', baudrate=9600, timeout=2)
+        
     def read(self):
          # Send a command to tell Arduino to capture one frame
         self.__arduino.write(b"r")
         
         # Give Arduino a moment to capture and send
-        time.sleep(2)
+        # time.sleep(1)
 
         # We expect 176 * 144 * 2 bytes for RGB565
         bytes_to_read = self.width * self.height * 2
