@@ -46,4 +46,4 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-//setInterval(accelerometer, 1000);
+setInterval(accelerometer, 1000);

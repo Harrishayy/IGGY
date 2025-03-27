@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, session, R
 from robot import Robot
 from object_recognition import detect_object, draw_detection
 import cv2
+import math
 
 
 app = Flask(__name__)
@@ -73,6 +74,15 @@ def robot_move():
 @app.route("/accelerometer", methods=["POST"])
 def acc():
     data = robot.read_accelerometer()
+
+    ax,ay,az=data[0],data[1],data[2]
+
+    mag = ax*ax + ay*ay + az*az
+
+    if (mag > 10):
+        robot.emote.emotion_state("sad")
+
+
 
     return jsonify({"log":data})
 

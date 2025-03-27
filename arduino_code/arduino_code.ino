@@ -13,6 +13,7 @@ MotoronI2C md;
 #define DHTTYPE DHT11
 
 #define LED_PIN 2
+#define BUTTON_PIN 3
 
 #define ADXL345 0x53 // The ADXL345 sensor I2C address
 
@@ -145,6 +146,7 @@ void setup()
   Serial.setTimeout(1); 
 
   pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   pinMode(MOTOR_1_PIN, OUTPUT);
   pinMode(MOTOR_2_PIN, OUTPUT);
@@ -203,6 +205,11 @@ void setup()
   md.clearResetFlag();
 
   Serial.println("Motoron Motor Driver Connected!");
+
+  while (!digitalRead(BUTTON_PIN)) {
+    Serial.println("Waiting for button!");
+    delay(50);  // wait for button to be pressed before going into main loop
+  }
 
   delay(100);
 }
