@@ -13,7 +13,6 @@ MotoronI2C md;
 #define DHTTYPE DHT11
 
 #define LED_PIN 2
-#define BUTTON_PIN 3
 
 #define ADXL345 0x53 // The ADXL345 sensor I2C address
 
@@ -68,28 +67,21 @@ void fanVoltage(float temp)
     pwm = 0;
   }
 
-  if (temp <= 26){
+  if (temp <= 24){
     pwm = 0;
   }
 
-  // Serial.print("Temperature: ");
-  // Serial.println(temp);
+  Serial.print("Temperature: ");
+  Serial.println(temp);
 
-  // Serial.print("Fan PWM: ");
-  // Serial.println(pwm);
+  Serial.print("Fan PWM: ");
+  Serial.println(pwm);
 
-  // analogWrite(FAN_PIN, 255);
   setFanSpeed(1, pwm);
 }
 
 void set_motor(int motor_id, int speed)
 {
-
-  Serial.print("Motor ID: ");
-  Serial.println(motor_id);
-  Serial.print("Motor speed: ");
-  Serial.println(speed);
-
   switch(motor_id)
   {
     case 0:
@@ -124,8 +116,6 @@ void set_motor(int motor_id, int speed)
       else if (speed < 0)
       {
         speed = -speed;
-        Serial.print("Speed: ");
-        Serial.println(speed);
         analogWrite(MOTOR_SPEED_2_PIN, speed);
         digitalWrite(MOTOR_2_PIN, LOW);
       }
@@ -146,7 +136,6 @@ void setup()
   Serial.setTimeout(1); 
 
   pinMode(LED_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   pinMode(MOTOR_1_PIN, OUTPUT);
   pinMode(MOTOR_2_PIN, OUTPUT);
@@ -163,7 +152,7 @@ void setup()
       break;
     }
     Serial.println("ADXL345 NOT FOUND! Retrying...");
-    delay(1000); // Retry every second
+    delay(1000); // retry every second to find acc
   }
 
   Serial.println("ADXL345 Connected!");
@@ -200,16 +189,11 @@ void setup()
 
   Serial.println("Initialising Motoron Motor Driver...");
 
-  md.reinitialize();    // Bytes: 0x96 0x74
-  md.disableCrc();      // Bytes: 0x8B 0x04 0x7B 0x43
+  md.reinitialize();
+  md.disableCrc();
   md.clearResetFlag();
 
   Serial.println("Motoron Motor Driver Connected!");
-
-  while (!digitalRead(BUTTON_PIN)) {
-    Serial.println("Waiting for button!");
-    delay(50);  // wait for button to be pressed before going into main loop
-  }
 
   delay(100);
 }
@@ -245,22 +229,22 @@ void loop() {
     
     for(int i = 0; i < 6; i++) 
     {   
-      // Start I2C Transmission   
-      Wire.beginTransmission(ADXL345);   
-      // Select data register   
+      //start I2C Transmission and select data register
+      Wire.beginTransmission(ADXL345);    
       Wire.write((50 + i));   
-      // Stop I2C transmission   
-      Wire.endTransmission();       
-      // Request 1 byte of data   
-      Wire.requestFrom(ADXL345, 1);       
-      // Read 6 bytes of data   
-      // xAccl lsb, xAccl msb, yAccl lsb, yAccl msb, zAccl lsb, zAccl msb   
+      Wire.endTransmission();   
+
+      //request byte of data   
+      Wire.requestFrom(ADXL345, 1);        
+      
       if(Wire.available() == 1)   
-      {     
+      {
+        //read 6 bytes of data: xAccl lsb, xAccl msb, yAccl lsb, yAccl msb, zAccl lsb, zAccl msb   
         acc_data[i] = Wire.read();   
       } 
-    }   
-    // Convert the data to 10-bits 
+    }
+    
+    //convert to 10 bits 
     X_raw = (((acc_data[1] & 0x03) * 256) + acc_data[0]); 
     if(X_raw > 511) 
     {   
@@ -283,13 +267,15 @@ void loop() {
     Y_out = Y_raw * 0.0039 * 9.81;
     Z_out = Z_raw * 0.0039 * 9.81;
     
-    // Output data to serial monitor 
+    //convert float to string
     dtostrf(X_out, 4, 2, x_str);
     dtostrf(Y_out, 4, 2, y_str);
     dtostrf(Z_out, 4, 2, z_str);
 
+    //concatenate into single string
     output = String(x_str) + "/" + String(y_str) + "/" + String(z_str);
 
+    //print to monitor/send back to pi
     Serial.println(output);
   }
 
@@ -302,11 +288,13 @@ void loop() {
 
     if (led_state)
     {
+      //LED off
       digitalWrite(LED_PIN, LOW);
       led_state = false;
     }
     else
     {
+      //LED on
       digitalWrite(LED_PIN, HIGH);
       led_state = true;
     }
@@ -315,14 +303,6 @@ void loop() {
     temp = dht.readTemperature();
     humidity = dht.readHumidity();
 
-    
-
     fanVoltage(temp);
   }
-
-  
-
 }
-
-
- 
