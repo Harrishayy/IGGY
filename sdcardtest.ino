@@ -155,26 +155,25 @@ void drawBmp(const char *filename, int16_t x, int16_t y) {
     return;
   }
 
-  // Read and convert pixel data one row at a time to avoid memory overflow
-  bmpFile.seek(54);  // Skip the header
+  // one row at a time to avoid memory overflow
+  bmpFile.seek(54);  // skip header
 
-  uint8_t row[3 * w];  // Temporary row buffer (24-bit RGB for one row)
+  uint8_t row[3 * w];  // temporary row buffer
 
-  // Loop through the rows and read pixels one by one
+  // loop through rows and read pixels one by one
   for (int rowIdx = 0; rowIdx < h; rowIdx++) {
-    // Read one row of pixels (24 bits per pixel)
+    // read one row of pixels (24 bits per pixel)
     bmpFile.read(row, 3 * w);
 
-    // Convert each pixel and send to TFT
+    // convert each pixel
     for (int colIdx = 0; colIdx < w; colIdx++) {
       uint8_t b = row[3 * colIdx];      // Blue component
       uint8_t g = row[3 * colIdx + 1];  // Green component
       uint8_t r = row[3 * colIdx + 2];  // Red component
 
-      // Convert 24-bit RGB to 16-bit RGB565
+      // 24-bit rgb to 16-bit rgb565
       uint16_t color = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
-      
-      // Write pixel to TFT
+
       tft.drawPixel(320 - (x + colIdx), y + rowIdx, color);
     }
   }
